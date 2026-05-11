@@ -1202,6 +1202,7 @@ const TRIP_DATA = {
           locationName: "GICROS GINZA GEMS · Ginza, Tokyo",
           address: "Ginza, Chuo City, Tokyo, Japan",
           mapsQuery: "Setsugekka Ginza GICROS GEMS Tokyo",
+          mapsUrl: "https://maps.app.goo.gl/dECYbud2zq9VKwDn8?g_st=ic",
           desc: "One of Tokyo's most refined modern yakiniku-kappō rooms — the work of beef specialist Satoru Tanaka, who applies the pacing and elegance of kaiseki to premium Tajima-bloodline Kobe beef and Matsusaka beef. Each cut is grilled over charcoal directly in front of the guests and served at its precise ideal moment. Yasumichi Morita's interior is dark, polished, and quietly adult — closer to a chef's theatre than a classic smoke-heavy yakiniku.",
           note: "Twelve counter seats; at nine covers the group effectively buys out the room. Mr. Ge, Aiman, and Ivy are tentatively held for this evening rather than Kanda. SNK colleagues may still be added.",
           badges: [
@@ -1394,7 +1395,10 @@ function renderDays() {
 }
 
 function renderStop(stop) {
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.mapsQuery || stop.locationName)}`;
+  // If a stop provides a direct Google Maps link (e.g. a maps.app.goo.gl
+  // short URL pointing at a specific venue), use it. Otherwise fall back to
+  // a search query built from mapsQuery or locationName.
+  const mapsUrl = stop.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.mapsQuery || stop.locationName)}`;
   const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(stop.mapsQuery || stop.locationName)}`;
 
   const badges = (stop.badges || []).map(b =>
