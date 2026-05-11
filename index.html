@@ -5,7 +5,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0a1733" />
-<title>Erik · Tokyo 2026 · Happy Camper</title>
+<title>Erik Feig · Tokyo 2026 · Happy Camper</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -116,8 +116,11 @@ a { color: inherit; text-decoration: none; }
   font-family: 'Cormorant Garamond', serif;
   font-size: 22px;
   color: var(--cream);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.01em;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-style: normal;
 }
 .clock-label {
   font-size: 9px;
@@ -760,7 +763,7 @@ button, .action, .emerg-card, .tab-btn { min-height: 36px; }
   <div class="header-row">
     <div class="brand">
       <span class="brand-mark">Happy Camper</span>
-      <span class="brand-sub">Erik · Tokyo · 2026</span>
+      <span class="brand-sub">Erik Feig · Tokyo · 2026</span>
     </div>
     <div class="clock">
       <div class="clock-time" id="clock-time">—</div>
@@ -779,8 +782,8 @@ button, .action, .emerg-card, .tab-btn { min-height: 36px; }
       <div class="cover-eyebrow">Private Travel · 2026</div>
       <h1 class="cover-title">Tokyo</h1>
       <div class="cover-rule"></div>
-      <div class="cover-meta">A Private Journey for Erik &amp; Guests</div>
-      <div class="cover-dates">30 May – 3 June 2026 · Five Days</div>
+      <div class="cover-meta">A Private Journey for Erik Feig</div>
+      <div class="cover-dates">30 May – 3 June 2026 · A Group of Friends</div>
     </div>
 
 ```
@@ -814,8 +817,8 @@ button, .action, .emerg-card, .tab-btn { min-height: 36px; }
 <div class="critical">
   <div class="critical-eyebrow">Critical · Omakase Etiquette</div>
   <h3>No Fragrance</h3>
-  <p>At <strong>Kanda</strong> especially, and at every counter dining occasion: please come <strong>without perfume, cologne, scented hair products, or strongly scented hand creams</strong>.</p>
-  <p>Aroma carries on a still counter. The kitchen will refuse seating in serious cases. This is the single most important etiquette point of the trip.</p>
+  <p>At <strong>Kanda</strong> especially, and at every counter dinner this week: please come <strong>without cologne, perfume, scented oils, hair products, or strongly fragranced personal care</strong> — laundry detergents included.</p>
+  <p>The chef's composition relies on guests being able to read aroma. A small oversight here can compromise the entire room. This is non-negotiable at counter omakase.</p>
 </div>
 
 <!-- Currency -->
@@ -849,7 +852,7 @@ button, .action, .emerg-card, .tab-btn { min-height: 36px; }
   <ul class="etq-list">
     <li class="etq-item">
       <h4>Punctuality is precise</h4>
-      <p>Arrive five minutes before the booked time — not earlier, not later. At Kanda, <strong>19:55 sharp</strong>. The meal begins simultaneously for all guests.</p>
+      <p>Omakase meals begin simultaneously for all guests. A meet-and-go time will be confirmed at the hotel before each dinner. At <strong>Kanda, the room is released at 20:00 sharp</strong> — a single late arrival shifts the chef's rhythm for everyone.</p>
     </li>
     <li class="etq-item">
       <h4>No fragrance, no scented products</h4>
@@ -876,34 +879,63 @@ button, .action, .emerg-card, .tab-btn { min-height: 36px; }
   <div class="util-sub">Staying online in Tokyo</div>
   <p><strong>eSIM:</strong> Activate before departure. Airalo, HolaFly, and YO all work well in Japan. 4G/5G coverage is excellent across Tokyo.</p>
   <p><strong>Suica:</strong> Add to Apple Wallet for subway, bus, and most trains. Tap to pay at the gate.</p>
-  <p><strong>WhatsApp group:</strong> Open one week before arrival. Use it in preference to email once live.</p>
+  <p><strong>WhatsApp group:</strong> Opens forty-eight hours before arrival. All confirmations, time changes, and headcounts flow through this channel. Enable notifications for the trip.</p>
 </div>
 
 <!-- Cash -->
 <div class="util-card">
   <h3>Cash</h3>
   <div class="util-sub">Yen, ATMs, settlement</div>
-  <p>Japan remains a cash-based society at the level of dining we operate at. Plan to settle each restaurant evening in yen at the end of the meal — card is accepted at most venues but not all, and a cash settlement reads as both respectful and frictionless.</p>
-  <p>Withdraw from any major hotel ATM, Haneda or Narita on arrival, or any 7-Eleven / Japan Post.</p>
+  <p>Several venues prefer cash for ancillaries — sake supplements, gratuities, small purchases. We recommend each guest carry roughly <strong>¥50,000</strong> in yen for the week.</p>
+  <p>ATMs at <strong>7-Eleven</strong> and <strong>Japan Post</strong> are the most reliable for international cards. Available at Haneda and Narita on arrival, and any major hotel.</p>
 </div>
 
 <!-- Investment -->
 <div class="util-card">
   <h3>Programme Investment</h3>
-  <div class="util-sub">Erik · Five days · Tokyo</div>
+  <div class="util-sub">Erik Feig &amp; Group · Five days · Tokyo</div>
+
+  <div style="font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); margin: 4px 0 8px;">Dining</div>
   <ul class="invest-list">
-    <li>Confirmed dining · three evenings <span class="amt">USD 4,900</span></li>
-    <li>Private touring with Iko · guide fees <span class="amt">USD 2,350</span></li>
-    <li>Ground transport · touring day <span class="amt">USD 450</span></li>
-    <li>Arrangement &amp; on-trip support <span class="amt">USD 2,500</span></li>
-    <li class="discount">Introductory discount <span class="amt">(USD 2,500)</span></li>
+    <li>Sōwadō · 5 covers <span class="amt">USD 625</span></li>
+    <li>Tempura Ono · private buy-out, 8 covers <span class="amt">USD 900</span></li>
+    <li>Setsugekka Ginza · 9 covers <span class="amt">USD 2,250</span></li>
+    <li>Kanda ★★★ · 6 covers <span class="amt">USD 2,700</span></li>
+    <li style="font-weight: 600; color: var(--navy-deep);">Restaurants subtotal <span class="amt">USD 6,475</span></li>
   </ul>
-  <div class="invest-total">
-    <span class="lbl">Total Agreed Price</span>
-    <span class="val">USD 7,700</span>
+
+  <div style="font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); margin: 14px 0 8px;">Guiding &amp; Car Service</div>
+  <ul class="invest-list">
+    <li>Private guiding with Iko-san · full day <span class="amt">USD 2,700</span></li>
+    <li>Car service · Toyota HiAce <span class="amt">USD 600</span></li>
+    <li style="font-weight: 600; color: var(--navy-deep);">Guiding subtotal <span class="amt">USD 3,300</span></li>
+  </ul>
+
+  <div style="font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); margin: 14px 0 8px;">Arrangement Fee</div>
+  <ul class="invest-list">
+    <li>Planning, booking &amp; reservation management <span class="amt">USD 2,500</span></li>
+  </ul>
+
+  <div class="invest-total" style="margin-top: 18px;">
+    <span class="lbl">Total Programme</span>
+    <span class="val">USD 12,275</span>
   </div>
+
+  <div style="font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); margin: 22px 0 8px;">Settlement</div>
+  <ul class="invest-list">
+    <li>Total programme <span class="amt">USD 12,275</span></li>
+    <li class="discount">Goodwill discount applied <span class="amt">(USD 2,500)</span></li>
+    <li style="font-weight: 600; color: var(--navy-deep);">Net amount due <span class="amt">USD 9,775</span></li>
+    <li class="discount">Invoice 646000 · paid <span class="amt">(USD 7,700)</span></li>
+  </ul>
+
+  <div class="invest-total" style="margin-top: 12px; background: linear-gradient(135deg, var(--navy-deep), var(--navy-mid)); border: 1px solid var(--gold);">
+    <span class="lbl">Outstanding Balance</span>
+    <span class="val">USD 2,075</span>
+  </div>
+
   <p style="margin-top: 14px; font-size: 13px;">
-    Excludes food and beverage spend at the restaurants (settled directly in cash on the night), hotel accommodation, flights, and personal expenses.
+    Out-of-pocket items — sake supplements, gratuities, beverage pairings, and ancillary purchases — are settled directly at each venue. Restaurant cancellation fees, where imposed, are passed through at cost.
   </p>
 </div>
 ```
@@ -1038,10 +1070,12 @@ button, .action, .emerg-card, .tab-btn { min-height: 36px; }
    Edit this object to adjust the itinerary.
    ───────────────────────────────────────────────────────────── */
 const TRIP_DATA = {
-  tripTitle: "Erik · Tokyo 2026",
+  tripTitle: "Erik Feig · Tokyo 2026",
   startDate: "2026-05-30",
   endDate:   "2026-06-03",
-  travelers: "Erik and Guests",
+  travelers: "Erik Feig and Group",
+  hotelName: "Janu Tokyo",
+  hotelArea: "Azabudai Hills · Aman Group",
   // Tokyo coordinates for weather lookup (Open-Meteo, no API key needed)
   weatherCoords: { lat: 35.6762, lon: 139.6503, city: "Tokyo" },
 
@@ -1051,58 +1085,78 @@ const TRIP_DATA = {
       dayNum: 1,
       title: "Arrival in Tokyo",
       city: "Tokyo",
-      summary: "Sayonara, customs. Saturday landing, evening at leisure.",
-      hotel: "Tokyo · Hotel arranged separately",
+      summary: "Janu Tokyo check-in. Sōwadō for the opening dinner.",
       stops: [
         {
           time: "Arrival",
-          title: "Welcome to Tokyo",
-          type: "arrival",
-          locationName: "Haneda or Narita Airport",
+          title: "Janu Tokyo",
+          type: "hotel",
+          locationName: "Azabudai Hills · Aman Group",
+          address: "1-2-2 Azabudai, Minato City, Tokyo 106-0041, Japan",
+          mapsQuery: "Janu Tokyo Azabudai Hills",
+          desc: "The group settles into Janu Tokyo — Aman's sister property in the new Azabudai Hills development. Suites and connecting rooms held for the full party. The concierge desk is briefed and ready to coordinate any last-minute adjustments through Happy Camper.",
+          note: "Optional: a private spa block can be reserved on request — useful for guests arriving on long-haul flights.",
+          badges: [
+            { label: "Hotel", class: "" },
+            { label: "Aman Group", class: "guide" },
+            { label: "4 Nights", class: "" }
+          ]
+        },
+        {
+          time: "20:00 · Dinner",
+          title: "Sōwadō",
+          type: "dinner",
+          locationName: "Sōwadō · Tokyo",
           address: "Tokyo, Japan",
-          mapsQuery: "Haneda Airport Tokyo",
-          desc: "The first evening is intentionally unscheduled. Air travel into Haneda or Narita leaves most arrivals tired by sunset, and the city rewards a slow start far more than a forced one. Settle into the hotel, take a short walk if appetite for it is there, and let the neighbourhood reveal itself at its own pace.",
-          note: "No reservations on the evening of arrival, by design. The real journey begins tomorrow.",
-          badges: [{ label: "Leisure", class: "leisure" }]
+          mapsQuery: "Sowado restaurant Tokyo",
+          desc: "A quiet opening night at Sōwadō — a Kyoto-style counter restaurant with a tightly held reservation list. The pace is deliberate: a long, narrative kaiseki built around first-of-season ingredients and the chef's reading of the room. Five covers, intimate and unhurried.",
+          note: "A gentle entry into the week. No photography at the counter. The chef speaks limited English; he reads the guests well regardless.",
+          badges: [
+            { label: "Confirmed", class: "confirmed" },
+            { label: "Counter", class: "" },
+            { label: "5 Covers", class: "" },
+            { label: "Kyō-ryōri", class: "" }
+          ]
         }
       ]
     },
     {
       date: "2026-05-31",
       dayNum: 2,
-      title: "Tokyo, with Iko",
+      title: "A City Day with Iko-san",
       city: "Tokyo",
-      summary: "A full day with our long-standing private guide. Sowoda for dinner.",
+      summary: "Full day with Ikuko Tamura. Tempura Ono private buy-out at 19:30.",
       stops: [
         {
-          time: "Full Day",
-          title: "Tokyo Tour with Iko",
+          time: "09:00 · Full Day",
+          title: "Tokyo with Ikuko (Iko) Tamura",
           type: "guide",
-          locationName: "Tokyo · Private guide",
-          address: "Meeting point confirmed via WhatsApp the evening before",
-          mapsQuery: "Tokyo Japan",
-          desc: "Iko has guided for us in Tokyo for years. He works the way the best private guides everywhere do — light on dates and statistics, generous on context, and unafraid to change the route mid-morning if a better thread presents itself. The day will move with the group's energy rather than a fixed schedule. Expect a balance of the old city and the contemporary one: a temple or shrine reached at a quieter hour, a stop for coffee or matcha, perhaps a market or a craft visit, and a long lunch chosen on the morning depending on appetite and weather. A private car follows throughout.",
-          note: "Iko will confirm the morning's start time and meeting point through the WhatsApp group the evening before.",
+          locationName: "Bilingual private host · Toyota HiAce",
+          address: "Meeting at Janu Tokyo · timing confirmed via WhatsApp the evening before",
+          mapsQuery: "Janu Tokyo Azabudai Hills",
+          desc: "Iko-san brings an unusual blend of Japanese omotenashi and international polish. Twelve years with Emirates Airline as cabin crew — six of them in First Class — followed by a year as personal assistant to a chairman in Abu Dhabi, and a return to Japan as a VIP attendant for inbound private guests. She is fluent in English, calm under pressure, and reads a room quickly. The day shapes itself around the group's appetite — a quiet temple route through Yanaka if the morning is slow; a private viewing in a Ginza atelier or a craftsman's workshop if curiosity sparks.",
+          note: "WhatsApp and LINE direct to Iko-san throughout. Toyota HiAce, five guests, full-day car service.",
           badges: [
             { label: "Private Guide", class: "guide" },
-            { label: "4 Guests", class: "" },
+            { label: "Bilingual", class: "" },
+            { label: "5 Guests", class: "" },
             { label: "Car Throughout", class: "" }
           ]
         },
         {
-          time: "20:00 · Dinner",
-          title: "Sowoda",
+          time: "19:30 · Dinner",
+          title: "Tempura Ono · Private Buy-out",
           type: "dinner",
-          locationName: "Sowoda · Tokyo",
+          locationName: "Tempura Ono · Tokyo",
           address: "Tokyo, Japan",
-          mapsQuery: "Sowoda restaurant Tokyo",
-          desc: "An intimate counter where the meal unfolds course by course in front of the chef. The pace is unhurried, the produce reads as the diary of the season, and the room holds only as many guests as the kitchen can serve with proper attention. A strong opening evening to the culinary side of the trip.",
-          note: "Counter seating · Light fragrance only — see Utilities tab.",
+          mapsQuery: "Tempura Ono Tokyo",
+          desc: "A special opening secured for the group — the entire tempura counter at Ono, closed to the public for the evening. Edomae tempura at its most exacting: sesame oil, a single chef, the fish and vegetables arriving in sequence over roughly two hours. The buy-out allows the larger group of eight to sit together rather than splitting across services.",
+          note: "This is the night Abel Tesfaye and LaMar Taylor are expected to join. Counter seating, so the privacy of the buy-out matters.",
           badges: [
             { label: "Confirmed", class: "confirmed" },
-            { label: "Counter", class: "" },
-            { label: "6 Guests", class: "" },
-            { label: "Kappo", class: "" }
+            { label: "Private Buy-out", class: "michelin" },
+            { label: "8 Covers", class: "" },
+            { label: "Edomae Tempura", class: "" }
           ]
         }
       ]
@@ -1110,34 +1164,34 @@ const TRIP_DATA = {
     {
       date: "2026-06-01",
       dayNum: 3,
-      title: "A day at leisure",
+      title: "Setsugekka Ginza",
       city: "Tokyo",
-      summary: "Tokyo on your own terms. Setsugetsuka for dinner — table of eight.",
+      summary: "Open day. Setsugekka Ginza in the evening — Satoru Tanaka's modern yakiniku-kappō.",
       stops: [
         {
           time: "Daytime",
-          title: "Tokyo on your own terms",
+          title: "Open Day",
           type: "leisure",
-          locationName: "Tokyo",
+          locationName: "Tokyo · No fixed programme",
           address: "At your discretion",
-          mapsQuery: "Tokyo",
-          desc: "Today is held open. After a long touring day, the group's instinct is usually a slower morning — coffee unhurried, perhaps a museum or a single neighbourhood explored on foot, and lunch wherever the wandering lands.",
-          note: "If anyone is keen to add a half-day activity — tea ceremony, sword polishing, denim or knife workshop — let us know via WhatsApp by Sunday evening.",
+          mapsQuery: "Azabudai Hills Tokyo",
+          desc: "A deliberate gap in the schedule. The group rests, shops, works, or arranges meetings as needed. Happy Camper is reachable on WhatsApp throughout for last-minute introductions — gallery visits, a private viewing at a menswear atelier, a quiet morning at a member's sentō.",
           badges: [{ label: "Leisure", class: "leisure" }]
         },
         {
           time: "20:00 · Dinner",
-          title: "Setsugetsuka",
+          title: "Setsugekka Ginza",
           type: "dinner",
-          locationName: "Setsugetsuka · Tokyo",
-          address: "Tokyo, Japan",
-          mapsQuery: "Setsugetsuka restaurant Tokyo",
-          desc: "The largest of the three confirmed dinners and the one to bring additional friends or family to. The name translates as snow, moon, and flowers — the trio of seasonal motifs that classical Japanese aesthetics returns to again and again, and the kitchen's menu follows the same instinct. A more flexible room than the counter venues, suited to a full table of eight.",
-          note: "Confirmed for a party of eight. Final guest list locks 24 hours prior.",
+          locationName: "GICROS GINZA GEMS · Ginza, Tokyo",
+          address: "Ginza, Chuo City, Tokyo, Japan",
+          mapsQuery: "Setsugekka Ginza GICROS GEMS Tokyo",
+          desc: "One of Tokyo's most refined modern yakiniku-kappō rooms — the work of beef specialist Satoru Tanaka, who applies the pacing and elegance of kaiseki to premium Tajima-bloodline Kobe beef and Matsusaka beef. Each cut is grilled over charcoal directly in front of the guests and served at its precise ideal moment. Yasumichi Morita's interior is dark, polished, and quietly adult — closer to a chef's theatre than a classic smoke-heavy yakiniku.",
+          note: "Twelve counter seats; at nine covers the group effectively buys out the room. Mr. Ge, Aiman, and Ivy are tentatively held for this evening rather than Kanda. SNK colleagues may still be added.",
           badges: [
             { label: "Confirmed", class: "confirmed" },
-            { label: "8 Guests", class: "" },
-            { label: "Seasonal Japanese", class: "" }
+            { label: "Effective Buy-out", class: "michelin" },
+            { label: "9 Covers", class: "" },
+            { label: "Yakiniku-Kappō", class: "" }
           ]
         }
       ]
@@ -1145,34 +1199,34 @@ const TRIP_DATA = {
     {
       date: "2026-06-02",
       dayNum: 4,
-      title: "The Kanda evening",
+      title: "Kanda",
       city: "Tokyo",
-      summary: "Three Michelin stars. The headline meal of the trip.",
+      summary: "The apex. Three Michelin stars in Sugimoto's Toranomon room.",
       stops: [
         {
-          time: "Daytime",
-          title: "An easy day, by design",
+          time: "Afternoon",
+          title: "A Quiet Afternoon",
           type: "leisure",
-          locationName: "Tokyo",
+          locationName: "Tokyo · Light schedule advised",
           address: "At your discretion",
           mapsQuery: "Tokyo",
-          desc: "We strongly suggest treating the day before Kanda as a quiet one. A long lunch is ill-advised; a light breakfast and a small early afternoon meal will leave appetite and palate properly prepared for the evening. A walk through a park or quiet neighbourhood is the right scale for the day.",
-          badges: [{ label: "Light Eating", class: "leisure" }]
+          desc: "We suggest a deliberately quiet afternoon. Kanda is the apex of the trip and rewards an unhurried arrival — light lunch, a walk, a short rest. The room is small, the chef reads his guests carefully, and the evening unfolds best when the table is fully present.",
+          badges: [{ label: "Light Eating Advised", class: "leisure" }]
         },
         {
-          time: "20:00 · Dinner",
+          time: "20:00 · Apex",
           title: "Kanda",
           type: "dinner",
-          locationName: "Kanda · Motoazabu, Tokyo",
-          address: "3-6-34 Moto-Azabu, Minato City, Tokyo 106-0046, Japan",
-          mapsQuery: "Kanda restaurant Motoazabu Tokyo",
-          desc: "The headline meal of the trip and the smallest of the three confirmed dinners. Chef Hiroyuki Kanda has held three stars for many years; the room seats only a handful of guests at a time and the meal proceeds with the care and precision that reputation suggests. Counter seating, a long sequence of seasonal courses, and a kitchen working at the very top of its discipline.",
-          note: "Counter seating · Strict no-fragrance policy · Punctuality at 19:55 SHARP is essential.",
+          locationName: "Kanda · Toranomon, Tokyo",
+          address: "Toranomon, Minato City, Tokyo, Japan",
+          mapsQuery: "Kanda restaurant Toranomon Tokyo",
+          desc: "Kanda remains one of Tokyo's defining kaiseki experiences. After nearly two decades in Moto-Azabu, Chef Hiroyuki Kanda relocated the restaurant to Toranomon, where the new space was designed by artist and architect Hiroshi Sugimoto — stone, wood, and subtle light composed into a serene, almost spiritual environment that mirrors the quiet elegance of the cuisine. Three Michelin stars retained throughout. Refined simplicity, seasonal precision, deeply personal hospitality.",
+          note: "No fragrance at the counter — critical. The room is released at 20:00 sharp. Six covers only, held for the inner group.",
           badges: [
             { label: "Confirmed", class: "confirmed" },
             { label: "★★★ Michelin", class: "michelin" },
-            { label: "5 Guests", class: "" },
-            { label: "Kaiseki", class: "" }
+            { label: "6 Covers", class: "" },
+            { label: "Kaiseki · Tier 1", class: "" }
           ]
         }
       ]
@@ -1180,19 +1234,19 @@ const TRIP_DATA = {
     {
       date: "2026-06-03",
       dayNum: 5,
-      title: "Departure",
+      title: "Departure from Tokyo",
       city: "Tokyo",
-      summary: "Sayonara, Tokyo. Hotel checkout, transfer arranged via concierge.",
+      summary: "Late check-out at Janu held on request. Onward travel.",
       stops: [
         {
           time: "Morning",
-          title: "Sayonara, Tokyo",
+          title: "Onward Travel",
           type: "departure",
-          locationName: "Hotel · Tokyo",
-          address: "Tokyo, Japan",
-          mapsQuery: "Tokyo",
-          desc: "A final morning in Tokyo. Pack at leisure, take one last coffee, and enjoy the city's quieter weekday rhythm before transfer to the airport. Departure transfers are best arranged through the hotel concierge once flight times are confirmed; we can intervene if anything proves complicated.",
-          note: "Should anyone wish to extend — Kyoto for a few nights, a ryokan in Hakone, or a longer onward journey — we are very happy to design a continuation.",
+          locationName: "Janu Tokyo · Azabudai Hills",
+          address: "1-2-2 Azabudai, Minato City, Tokyo 106-0041, Japan",
+          mapsQuery: "Janu Tokyo Azabudai Hills",
+          desc: "Late check-out at Janu held on request. Private transfers to Haneda or Narita coordinated through the hotel and Happy Camper. A final breakfast at the hotel before the group disperses.",
+          note: "A short post-trip note will follow, with restaurant feedback collected for the next visit.",
           badges: [{ label: "Departure", class: "" }]
         }
       ]
@@ -1361,23 +1415,56 @@ function escapeAttr(s) { return String(s).replace(/"/g, '&quot;'); }
 /* ─────────────────────────────────────────────────────────────
    WEATHER · Open-Meteo (no API key required)
    API docs: https://open-meteo.com/en/docs
+   Forecast horizon ≈ 16 days. We compute the in-range window before
+   calling the API and show a quiet fallback for everything beyond it.
    ───────────────────────────────────────────────────────────── */
+function setFallback(el, msg) {
+  el.classList.remove('loading');
+  el.innerHTML = `
+    <span class="weather-icon">◌</span>
+    <span class="weather-desc">${msg}</span>
+  `;
+}
+
+function daysBetween(a, b) {
+  return Math.round((new Date(b) - new Date(a)) / 86400000);
+}
+
 async function loadWeather() {
   const { lat, lon } = TRIP_DATA.weatherCoords;
-  const start = TRIP_DATA.startDate;
-  const end = TRIP_DATA.endDate;
+  const today = jstDateString();
+  const FORECAST_HORIZON = 15; // Open-Meteo safely covers ~16 days; keep one day buffer
 
-  // Open-Meteo allows forecast up to ~16 days. For dates beyond, we silently fall back.
+  // Determine which trip dates fall inside the forecast window.
+  const inRange = TRIP_DATA.days.filter(d => {
+    const delta = daysBetween(today, d.date);
+    return delta >= 0 && delta <= FORECAST_HORIZON;
+  });
+
+  // If nothing is in range, show a friendly fallback on every card and skip the API entirely.
+  if (inRange.length === 0) {
+    const tripStart = TRIP_DATA.startDate;
+    const daysUntil = daysBetween(today, tripStart);
+    const msg = daysUntil > FORECAST_HORIZON
+      ? `Forecast opens ${daysUntil - FORECAST_HORIZON} day${daysUntil - FORECAST_HORIZON === 1 ? '' : 's'} from now`
+      : 'Forecast available closer to date';
+    document.querySelectorAll('.weather.loading').forEach(el => setFallback(el, msg));
+    return;
+  }
+
+  // Fetch only the in-range slice.
+  const fetchStart = inRange[0].date;
+  const fetchEnd = inRange[inRange.length - 1].date;
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
               `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
-              `&timezone=Asia%2FTokyo&start_date=${start}&end_date=${end}`;
+              `&timezone=Asia%2FTokyo&start_date=${fetchStart}&end_date=${fetchEnd}`;
 
   try {
     const res = await fetch(url);
-    if (!res.ok) throw new Error('Forecast unavailable');
+    if (!res.ok) throw new Error('forecast endpoint returned ' + res.status);
     const data = await res.json();
-    const daily = data.daily;
-    if (!daily || !daily.time) throw new Error('No daily data');
+    const daily = data && data.daily;
+    if (!daily || !daily.time) throw new Error('no daily data');
 
     daily.time.forEach((dateStr, i) => {
       const el = document.querySelector(`.weather[data-date="${dateStr}"]`);
@@ -1394,25 +1481,15 @@ async function loadWeather() {
         <span class="weather-rain">${rain}% rain</span>
       `;
     });
-
-    // Any day card that didn't get a forecast (out-of-range) → graceful fallback
-    document.querySelectorAll('.weather.loading').forEach(el => {
-      el.classList.remove('loading');
-      el.innerHTML = `
-        <span class="weather-icon">◌</span>
-        <span class="weather-desc">Forecast available closer to date</span>
-      `;
-    });
   } catch (err) {
-    console.warn('Weather load failed:', err);
-    document.querySelectorAll('.weather.loading').forEach(el => {
-      el.classList.remove('loading');
-      el.innerHTML = `
-        <span class="weather-icon">◌</span>
-        <span class="weather-desc">Forecast unavailable — check closer to date</span>
-      `;
-    });
+    // Silent — the fallback handler below covers it. No console noise.
   }
+
+  // Any card still in loading state → graceful fallback (covers both
+  // out-of-range days and any partial API failure).
+  document.querySelectorAll('.weather.loading').forEach(el => {
+    setFallback(el, 'Forecast available closer to date');
+  });
 }
 
 // WMO weather codes → icon + label
