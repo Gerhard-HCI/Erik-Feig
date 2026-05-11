@@ -19,6 +19,7 @@
    ───────────────────────────────────────────────────────────── */
 
 :root {
+  color-scheme: dark;
   --navy-deep:    #0a1733;
   --navy:         #0e1a3a;
   --navy-mid:     #14224a;
@@ -42,9 +43,13 @@
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; padding: 0; }
+html {
+  background-color: #0a1733;
+  min-height: 100%;
+}
 body {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--navy-deep);
+  background-color: #0a1733;
   color: var(--cream);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -53,18 +58,6 @@ body {
   min-height: 100vh;
   padding-bottom: 88px;
   overflow-x: hidden;
-}
-
-/* Atmospheric background — subtle gold-on-navy texture */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at top, rgba(201,165,103,0.08), transparent 55%),
-    radial-gradient(ellipse at 30% 80%, rgba(201,165,103,0.05), transparent 50%);
-  pointer-events: none;
-  z-index: 0;
 }
 
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
@@ -152,7 +145,31 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ───── MAIN ───── */
-main { position: relative; z-index: 1; padding: 24px 20px 12px; max-width: 720px; margin: 0 auto; }
+main {
+  position: relative;
+  z-index: 1;
+  padding: 24px 20px 12px;
+  max-width: 720px;
+  margin: 0 auto;
+  /* Atmospheric gold radial textures live here, baked over solid navy.
+     Doing it on main means they're scoped to the content column rather
+     than the full viewport, which is more reliable inside iframes. */
+  background-color: #0a1733;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(201,165,103,0.07), transparent 55%),
+    radial-gradient(ellipse at 30% 90%, rgba(201,165,103,0.04), transparent 50%);
+  min-height: 100vh;
+}
+/* CRITICAL: every tab panel paints its own navy — never rely on inheritance.
+   This guards against the iOS-Safari-in-iframe quirk where body's background
+   sometimes fails to reach mid-document regions. */
+.tab-panel {
+  background-color: #0a1733;
+}
+/* Cover area gets a final explicit navy too, belt-and-braces */
+.cover {
+  background-color: #0a1733;
+}
 
 .tab-panel { display: none; animation: fadeIn .35s ease; }
 .tab-panel.active { display: block; }
@@ -976,7 +993,7 @@ button, .action, .emerg-card, .tab-btn { min-height: 36px; }
     <div class="emerg-icon">☎</div>
     <div class="emerg-info">
       <div class="emerg-label">Happy Camper · 24/7</div>
-      <div class="emerg-title">Tomoko</div>
+      <div class="emerg-title">Iko-san &amp; Team</div>
     </div>
     <div class="emerg-num" style="font-size: 14px;">+81 90 6158 9006</div>
   </a>
