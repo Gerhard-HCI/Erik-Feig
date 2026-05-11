@@ -1,1 +1,1627 @@
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0a1733" />
+<title>Erik Feig · Tokyo 2026 · Happy Camper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ─────────────────────────────────────────────────────────────
+   ERIK · TOKYO 2026 · HAPPY CAMPER ITINERARY
+   Single-file mobile-first travel companion.
+   Editable data lives in the TRIP_DATA constant near the bottom.
+   No API keys required. Weather uses Open-Meteo (free, no key).
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: dark;
+  --navy-deep:    #0a1733;
+  --navy:         #0e1a3a;
+  --navy-mid:     #14224a;
+  --navy-soft:    #1c2c5a;
+  --gold:         #c9a567;
+  --gold-bright:  #d8b87a;
+  --gold-soft:    #8b774a;
+  --cream:        #f5efdf;
+  --cream-soft:   #ebe3cd;
+  --ivory:        #faf6ec;
+  --ink:          #1a1f33;
+  --ink-soft:     #4a5168;
+  --line:         rgba(201, 165, 103, 0.22);
+  --line-strong:  rgba(201, 165, 103, 0.45);
+  --shadow-soft:  0 1px 2px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.22);
+  --shadow-card:  0 1px 2px rgba(0,0,0,0.25), 0 12px 32px rgba(0,0,0,0.30);
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+html {
+  background-color: #0a1733;
+  min-height: 100%;
+}
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #0a1733;
+  color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  line-height: 1.55;
+  min-height: 100vh;
+  padding-bottom: 88px;
+  overflow-x: hidden;
+}
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+/* ───── HEADER ───── */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10, 23, 51, 0.88);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 20px 12px;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+}
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.brand-mark {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+}
+.brand-sub {
+  font-size: 9.5px;
+  letter-spacing: 0.32em;
+  color: var(--cream-soft);
+  text-transform: uppercase;
+  margin-top: 2px;
+  opacity: 0.7;
+}
+.clock {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.clock-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--cream);
+  letter-spacing: 0.01em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-style: normal;
+}
+.clock-label {
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.day-pill {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 13px;
+  background: rgba(201,165,103,0.10);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+}
+.day-pill::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold);
+}
+
+/* ───── MAIN ───── */
+main {
+  position: relative;
+  z-index: 1;
+  padding: 24px 20px 12px;
+  max-width: 720px;
+  margin: 0 auto;
+  /* Atmospheric gold radial textures live here, baked over solid navy.
+     Doing it on main means they're scoped to the content column rather
+     than the full viewport, which is more reliable inside iframes. */
+  background-color: #0a1733;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(201,165,103,0.07), transparent 55%),
+    radial-gradient(ellipse at 30% 90%, rgba(201,165,103,0.04), transparent 50%);
+  min-height: 100vh;
+}
+/* CRITICAL: every tab panel paints its own navy — never rely on inheritance.
+   This guards against the iOS-Safari-in-iframe quirk where body's background
+   sometimes fails to reach mid-document regions. */
+.tab-panel {
+  background-color: #0a1733;
+}
+/* Cover area gets a final explicit navy too, belt-and-braces */
+.cover {
+  background-color: #0a1733;
+}
+
+.tab-panel { display: none; animation: fadeIn .35s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: none; } }
+
+/* ───── COVER / HERO ───── */
+.cover {
+  text-align: center;
+  padding: 30px 8px 36px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+}
+.cover-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.42em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.cover-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  margin: 0;
+}
+.cover-rule {
+  width: 56px;
+  height: 1px;
+  background: var(--gold);
+  margin: 18px auto;
+}
+.cover-meta {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--cream-soft);
+  letter-spacing: 0.02em;
+}
+.cover-dates {
+  margin-top: 6px;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--gold-bright);
+  text-transform: uppercase;
+}
+
+/* ───── SECTION HEADINGS ───── */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 32px 0 16px;
+}
+.section-head-line { flex: 1; height: 1px; background: var(--line); }
+.section-title {
+  font-size: 10.5px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+/* ───── DAY CARDS ───── */
+.day-card {
+  background: linear-gradient(180deg, rgba(20,34,74,0.55), rgba(14,26,58,0.55));
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: border-color .3s ease;
+}
+.day-card.is-today {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold-soft), 0 12px 36px rgba(0,0,0,0.35);
+}
+.day-card.is-past { opacity: 0.55; }
+
+.day-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 18px;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  min-height: 64px;
+}
+.day-num {
+  flex-shrink: 0;
+  width: 48px; height: 48px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--gold-bright);
+  background: rgba(201,165,103,0.06);
+}
+.day-card.is-today .day-num {
+  background: var(--gold);
+  color: var(--navy-deep);
+  border-color: var(--gold);
+}
+.day-info { flex: 1; min-width: 0; }
+.day-date {
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+.day-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  line-height: 1.15;
+  color: var(--cream);
+  font-weight: 500;
+}
+.day-toggle {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  transition: transform .35s ease;
+}
+.day-card.expanded .day-toggle { transform: rotate(180deg); }
+
+.day-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .5s ease;
+}
+.day-card.expanded .day-body { max-height: 6000px; }
+
+.day-body-inner { padding: 0 18px 22px; }
+
+/* ───── WEATHER STRIP ───── */
+.weather {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: rgba(201,165,103,0.05);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+.weather-icon { font-size: 22px; line-height: 1; }
+.weather-temp { font-weight: 500; color: var(--cream); }
+.weather-desc { color: var(--cream-soft); flex: 1; }
+.weather-rain { color: var(--gold-bright); font-size: 12px; }
+.weather.loading { color: var(--ink-soft); font-style: italic; opacity: 0.7; }
+
+/* ───── TIMELINE / STOPS ───── */
+.timeline { position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--line-strong);
+}
+
+.stop {
+  position: relative;
+  padding-left: 30px;
+  padding-bottom: 22px;
+}
+.stop:last-child { padding-bottom: 0; }
+.stop::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px var(--navy);
+}
+.stop-time {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.stop-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--cream);
+  margin: 0 0 4px;
+  font-weight: 500;
+}
+.stop-meta {
+  font-size: 12px;
+  color: var(--gold-bright);
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.stop-meta .dot { opacity: 0.5; margin: 0 6px; }
+.stop-desc {
+  font-size: 14.5px;
+  color: var(--cream-soft);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.stop-note {
+  font-style: italic;
+  font-size: 13px;
+  color: var(--cream-soft);
+  opacity: 0.78;
+  border-left: 2px solid var(--line-strong);
+  padding-left: 10px;
+  margin: 8px 0 12px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+}
+
+/* ───── BADGES ───── */
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  color: var(--cream-soft);
+  background: rgba(201,165,103,0.05);
+}
+.badge.confirmed { color: var(--gold-bright); border-color: var(--gold-soft); background: rgba(201,165,103,0.10); }
+.badge.michelin { color: var(--gold-bright); border-color: var(--gold); background: rgba(201,165,103,0.14); }
+.badge.leisure { color: var(--cream-soft); }
+.badge.guide { color: var(--gold-bright); border-color: var(--gold-soft); }
+
+/* ───── ACTION BUTTONS ───── */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 13px;
+  font-size: 12px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  color: var(--cream);
+  background: rgba(201,165,103,0.05);
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  transition: background .2s ease, border-color .2s ease;
+  min-height: 36px;
+}
+.action:hover, .action:active {
+  background: rgba(201,165,103,0.14);
+  border-color: var(--gold-soft);
+}
+.action-icon { font-size: 13px; line-height: 1; }
+.action.primary {
+  background: var(--gold);
+  color: var(--navy-deep);
+  border-color: var(--gold);
+}
+.action.primary:hover { background: var(--gold-bright); }
+
+/* ───── HOTEL / TRAVEL BLOCK ───── */
+.hotel-block, .travel-block {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: rgba(255,255,255,0.02);
+}
+.hotel-block-label, .travel-block-label {
+  font-size: 9.5px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.hotel-block-name, .travel-block-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.hotel-block-meta {
+  font-size: 13px;
+  color: var(--cream-soft);
+  margin-bottom: 8px;
+}
+
+/* ───── UTILITIES TAB ───── */
+.util-card {
+  background: var(--ivory);
+  color: var(--ink);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-card);
+}
+.util-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 500;
+  margin: 0 0 4px;
+  color: var(--navy-deep);
+}
+.util-card .util-sub {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  margin-bottom: 16px;
+}
+.util-card p { font-size: 14.5px; color: var(--ink-soft); margin: 8px 0; line-height: 1.6; }
+
+/* Currency Converter */
+.fx {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: end;
+  margin-top: 8px;
+}
+.fx-field { display: flex; flex-direction: column; gap: 4px; }
+.fx-field label {
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+}
+.fx-input {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  padding: 10px 12px;
+  border: 1px solid rgba(10,23,51,0.15);
+  border-radius: var(--r-md);
+  background: white;
+  color: var(--navy-deep);
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+.fx-input:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+.fx-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 18px;
+  height: 48px;
+}
+.fx-rate {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 12px;
+  letter-spacing: 0.06em;
+}
+.fx-rate .fx-edit { color: var(--gold-soft); cursor: pointer; text-decoration: underline; }
+
+/* Etiquette / list items */
+.etq-list { margin: 0; padding: 0; list-style: none; }
+.etq-item {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(10,23,51,0.08);
+}
+.etq-item:last-child { border-bottom: none; }
+.etq-item h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  margin: 0 0 4px;
+  color: var(--navy-deep);
+  font-weight: 600;
+}
+.etq-item p { margin: 0; font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; }
+
+/* Critical callout */
+.critical {
+  background: linear-gradient(135deg, var(--navy-deep), var(--navy-mid));
+  color: var(--cream);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  margin-bottom: 16px;
+  border: 1px solid var(--gold);
+  box-shadow: var(--shadow-card);
+}
+.critical-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.critical h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 500;
+  margin: 0 0 10px;
+  color: var(--cream);
+}
+.critical p { font-size: 14px; color: var(--cream-soft); line-height: 1.6; margin: 0 0 8px; }
+.critical strong { color: var(--gold-bright); font-weight: 600; }
+
+/* Investment summary */
+.invest-list { margin: 0 0 14px; padding: 0; list-style: none; }
+.invest-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(10,23,51,0.08);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.invest-list li.discount { color: var(--gold-soft); }
+.invest-list li .amt { font-weight: 600; color: var(--navy-deep); font-variant-numeric: tabular-nums; }
+.invest-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--navy-deep);
+  color: var(--cream);
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  margin-top: 6px;
+}
+.invest-total .lbl { font-size: 10px; letter-spacing: 0.32em; color: var(--gold); text-transform: uppercase; }
+.invest-total .val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  color: var(--cream);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───── EMERGENCY TAB ───── */
+.emerg-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.emerg-card {
+  background: var(--ivory);
+  color: var(--ink);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-soft);
+  text-decoration: none;
+  transition: transform .2s ease;
+}
+.emerg-card:active { transform: scale(0.98); }
+.emerg-card.urgent {
+  background: linear-gradient(135deg, #c1393b, #8c1e22);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.emerg-card.urgent .emerg-num,
+.emerg-card.urgent .emerg-label { color: white; }
+.emerg-icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(10,23,51,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.emerg-card.urgent .emerg-icon { background: rgba(255,255,255,0.18); }
+.emerg-info { flex: 1; min-width: 0; }
+.emerg-label {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  margin-bottom: 2px;
+}
+.emerg-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  color: var(--navy-deep);
+  font-weight: 500;
+  line-height: 1.2;
+}
+.emerg-card.urgent .emerg-title { color: white; }
+.emerg-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--navy-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───── BOTTOM TAB BAR ───── */
+.tabbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: rgba(10, 23, 51, 0.92);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.tab-btn {
+  padding: 12px 8px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--cream-soft);
+  opacity: 0.55;
+  transition: opacity .25s ease, color .25s ease;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.tab-btn.active { opacity: 1; color: var(--gold-bright); }
+.tab-btn-icon { font-size: 18px; line-height: 1; }
+
+/* ───── FOOTER (within scroll) ───── */
+.app-footer {
+  padding: 32px 12px 12px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--cream-soft);
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+.app-footer .footer-mark {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  text-transform: none;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* ───── COPY TOAST ───── */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 100px;
+  transform: translate(-50%, 30px);
+  background: var(--gold);
+  color: var(--navy-deep);
+  padding: 11px 20px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+  z-index: 200;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ───── RESPONSIVE TYPE / SMALL DEVICES ───── */
+@media (max-width: 360px) {
+  .cover-title { font-size: 46px; }
+  .day-title { font-size: 19px; }
+  .stop-title { font-size: 19px; }
+}
+@media (min-width: 720px) {
+  .cover-title { font-size: 72px; }
+}
+
+/* iOS tap targets */
+button, .action, .emerg-card, .tab-btn { min-height: 36px; }
+</style>
+
+</head>
+<body>
+
+<!-- ───── STICKY HEADER ───── -->
+
+<header class="app-header">
+  <div class="header-row">
+    <div class="brand">
+      <span class="brand-mark">Happy Camper</span>
+      <span class="brand-sub">Erik Feig · Tokyo · 2026</span>
+    </div>
+    <div class="clock">
+      <div class="clock-time" id="clock-time">—</div>
+      <div class="clock-label" id="clock-label">JST</div>
+    </div>
+  </div>
+  <div id="day-pill" class="day-pill" style="display:none;"></div>
+</header>
+
+<main>
+
+  <!-- ITINERARY -->
+
+  <section id="tab-itinerary" class="tab-panel active">
+    <div class="cover">
+      <div class="cover-eyebrow">Private Travel · 2026</div>
+      <h1 class="cover-title">Tokyo</h1>
+      <div class="cover-rule"></div>
+      <div class="cover-meta">A Private Journey for Erik Feig</div>
+      <div class="cover-dates">30 May – 3 June 2026 · A Group of Friends</div>
+    </div>
+
+```
+<div class="section-head">
+  <span class="section-title">The Journey</span>
+  <span class="section-head-line"></span>
+</div>
+
+<div id="days-container"></div>
+
+<div class="app-footer">
+  <span class="footer-mark">Unlocking Japan, one thoughtful moment at a time.</span>
+  Happy Camper Ltd. · hello@happycamper.food
+</div>
+```
+
+  </section>
+
+  <!-- UTILITIES -->
+
+  <section id="tab-utilities" class="tab-panel">
+    <div class="cover" style="padding: 24px 8px 28px;">
+      <div class="cover-eyebrow">The Practicalities</div>
+      <h1 class="cover-title" style="font-size: 42px;">Utilities</h1>
+      <div class="cover-rule"></div>
+      <div class="cover-meta">Tokyo · Tools for the journey</div>
+    </div>
+
+```
+<!-- Critical: Fragrance -->
+<div class="critical">
+  <div class="critical-eyebrow">Critical · Omakase Etiquette</div>
+  <h3>No Fragrance</h3>
+  <p>At <strong>Kanda</strong> especially, and at every counter dinner this week: please come <strong>without cologne, perfume, scented oils, hair products, or strongly fragranced personal care</strong> — laundry detergents included.</p>
+  <p>The chef's composition relies on guests being able to read aroma. A small oversight here can compromise the entire room. This is non-negotiable at counter omakase.</p>
+</div>
+
+<!-- Currency -->
+<div class="util-card">
+  <h3>Currency</h3>
+  <div class="util-sub">JPY ↔ USD</div>
+  <div class="fx">
+    <div class="fx-field">
+      <label for="fx-jpy">Japanese Yen</label>
+      <input id="fx-jpy" class="fx-input" type="number" inputmode="numeric" value="10000" />
+    </div>
+    <div class="fx-arrow">⇌</div>
+    <div class="fx-field">
+      <label for="fx-usd">US Dollar</label>
+      <input id="fx-usd" class="fx-input" type="number" inputmode="decimal" value="64.50" />
+    </div>
+  </div>
+  <div class="fx-rate">
+    Rate: <span id="fx-rate-display">1 USD = 155 JPY</span>
+    · <span class="fx-edit" id="fx-edit">edit</span>
+  </div>
+  <p style="margin-top:14px; font-size:13px;">
+    Plan to settle each restaurant evening in yen, in cash. ATMs at 7-Eleven and Japan Post accept international cards.
+  </p>
+</div>
+
+<!-- Etiquette -->
+<div class="util-card">
+  <h3>Dining Etiquette</h3>
+  <div class="util-sub">Counter conduct</div>
+  <ul class="etq-list">
+    <li class="etq-item">
+      <h4>Punctuality is precise</h4>
+      <p>Omakase meals begin simultaneously for all guests. A meet-and-go time will be confirmed at the hotel before each dinner. At <strong>Kanda, the room is released at 20:00 sharp</strong> — a single late arrival shifts the chef's rhythm for everyone.</p>
+    </li>
+    <li class="etq-item">
+      <h4>No fragrance, no scented products</h4>
+      <p>No perfume, cologne, scented hair products, scented detergent, gum, or smoking beforehand. This is non-negotiable at omakase counters.</p>
+    </li>
+    <li class="etq-item">
+      <h4>Smart-casual is right</h4>
+      <p>Japan values simplicity. A collared shirt is respectful at omakase. No jacket required. Comfortable shoes — you will walk.</p>
+    </li>
+    <li class="etq-item">
+      <h4>Protect the counter</h4>
+      <p>Sushi counters are often single pieces of Hinoki cypress. Remove rings, bracelets, and watches before sitting.</p>
+    </li>
+    <li class="etq-item">
+      <h4>Tipping is not customary</h4>
+      <p>Don't tip. A sincere "Gochisousama deshita" — "thank you for the meal" — is the right closing.</p>
+    </li>
+  </ul>
+</div>
+
+<!-- Connectivity -->
+<div class="util-card">
+  <h3>Connectivity</h3>
+  <div class="util-sub">Staying online in Tokyo</div>
+  <p><strong>eSIM:</strong> Activate before departure. Airalo, HolaFly, and YO all work well in Japan. 4G/5G coverage is excellent across Tokyo.</p>
+  <p><strong>Suica:</strong> Add to Apple Wallet for subway, bus, and most trains. Tap to pay at the gate.</p>
+  <p><strong>WhatsApp group:</strong> Opens forty-eight hours before arrival. All confirmations, time changes, and headcounts flow through this channel. Enable notifications for the trip.</p>
+</div>
+
+<!-- Cash -->
+<div class="util-card">
+  <h3>Cash</h3>
+  <div class="util-sub">Yen, ATMs, settlement</div>
+  <p>Several venues prefer cash for ancillaries — sake supplements, gratuities, small purchases. We recommend each guest carry roughly <strong>¥50,000</strong> in yen for the week.</p>
+  <p>ATMs at <strong>7-Eleven</strong> and <strong>Japan Post</strong> are the most reliable for international cards. Available at Haneda and Narita on arrival, and any major hotel.</p>
+</div>
+
+<!-- Investment -->
+<div class="util-card">
+  <h3>Programme Investment</h3>
+  <div class="util-sub">Erik Feig &amp; Group · Five days · Tokyo</div>
+
+  <div style="font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); margin: 4px 0 8px;">Dining</div>
+  <ul class="invest-list">
+    <li>Sōwadō · 5 covers <span class="amt">USD 625</span></li>
+    <li>Tempura Ono · private buy-out, 8 covers <span class="amt">USD 900</span></li>
+    <li>Setsugekka Ginza · 9 covers <span class="amt">USD 2,250</span></li>
+    <li>Kanda ★★★ · 6 covers <span class="amt">USD 2,700</span></li>
+    <li style="font-weight: 600; color: var(--navy-deep);">Restaurants subtotal <span class="amt">USD 6,475</span></li>
+  </ul>
+
+  <div style="font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); margin: 14px 0 8px;">Guiding &amp; Car Service</div>
+  <ul class="invest-list">
+    <li>Private guiding with Iko-san · full day <span class="amt">USD 2,700</span></li>
+    <li>Car service · Toyota HiAce <span class="amt">USD 600</span></li>
+    <li style="font-weight: 600; color: var(--navy-deep);">Guiding subtotal <span class="amt">USD 3,300</span></li>
+  </ul>
+
+  <div style="font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); margin: 14px 0 8px;">Arrangement Fee</div>
+  <ul class="invest-list">
+    <li>Planning, booking &amp; reservation management <span class="amt">USD 2,500</span></li>
+  </ul>
+
+  <div class="invest-total" style="margin-top: 18px;">
+    <span class="lbl">Total Programme</span>
+    <span class="val">USD 12,275</span>
+  </div>
+
+  <div style="font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); margin: 22px 0 8px;">Settlement</div>
+  <ul class="invest-list">
+    <li>Total programme <span class="amt">USD 12,275</span></li>
+    <li class="discount">Goodwill discount applied <span class="amt">(USD 2,500)</span></li>
+    <li style="font-weight: 600; color: var(--navy-deep);">Net amount due <span class="amt">USD 9,775</span></li>
+    <li class="discount">Invoice 646000 · paid <span class="amt">(USD 7,700)</span></li>
+  </ul>
+
+  <div class="invest-total" style="margin-top: 12px; background: linear-gradient(135deg, var(--navy-deep), var(--navy-mid)); border: 1px solid var(--gold);">
+    <span class="lbl">Outstanding Balance</span>
+    <span class="val">USD 2,075</span>
+  </div>
+
+  <p style="margin-top: 14px; font-size: 13px;">
+    Out-of-pocket items — sake supplements, gratuities, beverage pairings, and ancillary purchases — are settled directly at each venue. Restaurant cancellation fees, where imposed, are passed through at cost.
+  </p>
+</div>
+```
+
+  </section>
+
+  <!-- EMERGENCY -->
+
+  <section id="tab-emergency" class="tab-panel">
+    <div class="cover" style="padding: 24px 8px 28px;">
+      <div class="cover-eyebrow">Should anything arise</div>
+      <h1 class="cover-title" style="font-size: 42px;">Emergency</h1>
+      <div class="cover-rule"></div>
+      <div class="cover-meta">One tap, any hour</div>
+    </div>
+
+```
+<div class="emerg-grid">
+  <a class="emerg-card urgent" href="tel:110">
+    <div class="emerg-icon">🚓</div>
+    <div class="emerg-info">
+      <div class="emerg-label">Police</div>
+      <div class="emerg-title">Tap to Call</div>
+    </div>
+    <div class="emerg-num">110</div>
+  </a>
+
+  <a class="emerg-card urgent" href="tel:119">
+    <div class="emerg-icon">🚑</div>
+    <div class="emerg-info">
+      <div class="emerg-label">Ambulance &amp; Fire</div>
+      <div class="emerg-title">Tap to Call</div>
+    </div>
+    <div class="emerg-num">119</div>
+  </a>
+
+  <a class="emerg-card" href="tel:+819061589006">
+    <div class="emerg-icon">☎</div>
+    <div class="emerg-info">
+      <div class="emerg-label">Happy Camper · 24/7</div>
+      <div class="emerg-title">Iko-san &amp; Team</div>
+    </div>
+    <div class="emerg-num" style="font-size: 14px;">+81 90 6158 9006</div>
+  </a>
+
+  <a class="emerg-card" href="tel:+81356203311">
+    <div class="emerg-icon">🏥</div>
+    <div class="emerg-info">
+      <div class="emerg-label">English-Speaking Clinic</div>
+      <div class="emerg-title">Tokyo Medical &amp; Surgical Clinic</div>
+    </div>
+  </a>
+
+  <a class="emerg-card" href="tel:+81332245000">
+    <div class="emerg-icon">🇺🇸</div>
+    <div class="emerg-info">
+      <div class="emerg-label">U.S. Embassy · Tokyo</div>
+      <div class="emerg-title">Citizen Services</div>
+    </div>
+  </a>
+
+  <a class="emerg-card" href="tel:+81352115100">
+    <div class="emerg-icon">🇬🇧</div>
+    <div class="emerg-info">
+      <div class="emerg-label">British Embassy · Tokyo</div>
+      <div class="emerg-title">Consular Services</div>
+    </div>
+  </a>
+</div>
+
+<div class="util-card">
+  <h3>If something is not right</h3>
+  <div class="util-sub">A philosophy of trust</div>
+  <p style="font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--ink);">
+    Quietly tell us — never the room. We will resolve it.
+  </p>
+  <p>Happy Camper operates on the basis of long-standing personal relationships with each restaurant, guide, and driver. The fastest route to anything is the WhatsApp group, or the number above.</p>
+</div>
+
+<div class="util-card">
+  <h3>Useful phrases</h3>
+  <div class="util-sub">When language matters</div>
+  <ul class="etq-list">
+    <li class="etq-item">
+      <h4>Sumimasen — すみません</h4>
+      <p>"Excuse me" / "I'm sorry." Universal opener.</p>
+    </li>
+    <li class="etq-item">
+      <h4>Tasukete kudasai — 助けてください</h4>
+      <p>"Please help me." For genuine emergencies.</p>
+    </li>
+    <li class="etq-item">
+      <h4>Eigo o hanasemasu ka? — 英語を話せますか？</h4>
+      <p>"Do you speak English?"</p>
+    </li>
+    <li class="etq-item">
+      <h4>Gochisousama deshita — ごちそうさまでした</h4>
+      <p>"Thank you for the meal." The right closing at every restaurant.</p>
+    </li>
+  </ul>
+</div>
+```
+
+  </section>
+
+</main>
+
+<!-- ───── BOTTOM TAB BAR ───── -->
+
+<nav class="tabbar" role="tablist">
+  <button class="tab-btn active" data-tab="itinerary" role="tab" aria-label="Itinerary">
+    <span class="tab-btn-icon">◐</span>
+    <span>Itinerary</span>
+  </button>
+  <button class="tab-btn" data-tab="utilities" role="tab" aria-label="Utilities">
+    <span class="tab-btn-icon">◇</span>
+    <span>Utilities</span>
+  </button>
+  <button class="tab-btn" data-tab="emergency" role="tab" aria-label="Emergency">
+    <span class="tab-btn-icon">!</span>
+    <span>Emergency</span>
+  </button>
+</nav>
+
+<!-- Toast -->
+
+<div id="toast" class="toast">Address copied</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   TRIP DATA
+   Edit this object to adjust the itinerary.
+   ───────────────────────────────────────────────────────────── */
+const TRIP_DATA = {
+  tripTitle: "Erik Feig · Tokyo 2026",
+  startDate: "2026-05-30",
+  endDate:   "2026-06-03",
+  travelers: "Erik Feig and Group",
+  hotelName: "Janu Tokyo",
+  hotelArea: "Azabudai Hills · Aman Group",
+  // Tokyo coordinates for weather lookup (Open-Meteo, no API key needed)
+  weatherCoords: { lat: 35.6762, lon: 139.6503, city: "Tokyo" },
+
+  days: [
+    {
+      date: "2026-05-30",
+      dayNum: 1,
+      title: "Arrival in Tokyo",
+      city: "Tokyo",
+      summary: "Janu Tokyo check-in. Sōwadō for the opening dinner.",
+      stops: [
+        {
+          time: "Arrival",
+          title: "Janu Tokyo",
+          type: "hotel",
+          locationName: "Azabudai Hills · Aman Group",
+          address: "1-2-2 Azabudai, Minato City, Tokyo 106-0041, Japan",
+          mapsQuery: "Janu Tokyo Azabudai Hills",
+          desc: "The group settles into Janu Tokyo — Aman's sister property in the new Azabudai Hills development. Suites and connecting rooms held for the full party. The concierge desk is briefed and ready to coordinate any last-minute adjustments through Happy Camper.",
+          note: "Optional: a private spa block can be reserved on request — useful for guests arriving on long-haul flights.",
+          badges: [
+            { label: "Hotel", class: "" },
+            { label: "Aman Group", class: "guide" },
+            { label: "4 Nights", class: "" }
+          ]
+        },
+        {
+          time: "20:00 · Dinner",
+          title: "Sōwadō",
+          type: "dinner",
+          locationName: "Sōwadō · Tokyo",
+          address: "Tokyo, Japan",
+          mapsQuery: "Sowado restaurant Tokyo",
+          desc: "A quiet opening night at Sōwadō — a Kyoto-style counter restaurant with a tightly held reservation list. The pace is deliberate: a long, narrative kaiseki built around first-of-season ingredients and the chef's reading of the room. Five covers, intimate and unhurried.",
+          note: "A gentle entry into the week. No photography at the counter. The chef speaks limited English; he reads the guests well regardless.",
+          badges: [
+            { label: "Confirmed", class: "confirmed" },
+            { label: "Counter", class: "" },
+            { label: "5 Covers", class: "" },
+            { label: "Kyō-ryōri", class: "" }
+          ]
+        }
+      ]
+    },
+    {
+      date: "2026-05-31",
+      dayNum: 2,
+      title: "A City Day with Iko-san",
+      city: "Tokyo",
+      summary: "Full day with Ikuko Tamura. Tempura Ono private buy-out at 19:30.",
+      stops: [
+        {
+          time: "09:00 · Full Day",
+          title: "Tokyo with Ikuko (Iko) Tamura",
+          type: "guide",
+          locationName: "Bilingual private host · Toyota HiAce",
+          address: "Meeting at Janu Tokyo · timing confirmed via WhatsApp the evening before",
+          mapsQuery: "Janu Tokyo Azabudai Hills",
+          desc: "Iko-san brings an unusual blend of Japanese omotenashi and international polish. Twelve years with Emirates Airline as cabin crew — six of them in First Class — followed by a year as personal assistant to a chairman in Abu Dhabi, and a return to Japan as a VIP attendant for inbound private guests. She is fluent in English, calm under pressure, and reads a room quickly. The day shapes itself around the group's appetite — a quiet temple route through Yanaka if the morning is slow; a private viewing in a Ginza atelier or a craftsman's workshop if curiosity sparks.",
+          note: "WhatsApp and LINE direct to Iko-san throughout. Toyota HiAce, five guests, full-day car service.",
+          badges: [
+            { label: "Private Guide", class: "guide" },
+            { label: "Bilingual", class: "" },
+            { label: "5 Guests", class: "" },
+            { label: "Car Throughout", class: "" }
+          ]
+        },
+        {
+          time: "19:30 · Dinner",
+          title: "Tempura Ono · Private Buy-out",
+          type: "dinner",
+          locationName: "Tempura Ono · Tokyo",
+          address: "Tokyo, Japan",
+          mapsQuery: "Tempura Ono Tokyo",
+          desc: "A special opening secured for the group — the entire tempura counter at Ono, closed to the public for the evening. Edomae tempura at its most exacting: sesame oil, a single chef, the fish and vegetables arriving in sequence over roughly two hours. The buy-out allows the larger group of eight to sit together rather than splitting across services.",
+          note: "This is the night Abel Tesfaye and LaMar Taylor are expected to join. Counter seating, so the privacy of the buy-out matters.",
+          badges: [
+            { label: "Confirmed", class: "confirmed" },
+            { label: "Private Buy-out", class: "michelin" },
+            { label: "8 Covers", class: "" },
+            { label: "Edomae Tempura", class: "" }
+          ]
+        }
+      ]
+    },
+    {
+      date: "2026-06-01",
+      dayNum: 3,
+      title: "Setsugekka Ginza",
+      city: "Tokyo",
+      summary: "Open day. Setsugekka Ginza in the evening — Satoru Tanaka's modern yakiniku-kappō.",
+      stops: [
+        {
+          time: "Daytime",
+          title: "Open Day",
+          type: "leisure",
+          locationName: "Tokyo · No fixed programme",
+          address: "At your discretion",
+          mapsQuery: "Azabudai Hills Tokyo",
+          desc: "A deliberate gap in the schedule. The group rests, shops, works, or arranges meetings as needed. Happy Camper is reachable on WhatsApp throughout for last-minute introductions — gallery visits, a private viewing at a menswear atelier, a quiet morning at a member's sentō.",
+          badges: [{ label: "Leisure", class: "leisure" }]
+        },
+        {
+          time: "20:00 · Dinner",
+          title: "Setsugekka Ginza",
+          type: "dinner",
+          locationName: "GICROS GINZA GEMS · Ginza, Tokyo",
+          address: "Ginza, Chuo City, Tokyo, Japan",
+          mapsQuery: "Setsugekka Ginza GICROS GEMS Tokyo",
+          mapsUrl: "https://maps.app.goo.gl/dECYbud2zq9VKwDn8?g_st=ic",
+          desc: "One of Tokyo's most refined modern yakiniku-kappō rooms — the work of beef specialist Satoru Tanaka, who applies the pacing and elegance of kaiseki to premium Tajima-bloodline Kobe beef and Matsusaka beef. Each cut is grilled over charcoal directly in front of the guests and served at its precise ideal moment. Yasumichi Morita's interior is dark, polished, and quietly adult — closer to a chef's theatre than a classic smoke-heavy yakiniku.",
+          note: "Twelve counter seats; at nine covers the group effectively buys out the room. Mr. Ge, Aiman, and Ivy are tentatively held for this evening rather than Kanda. SNK colleagues may still be added.",
+          badges: [
+            { label: "Confirmed", class: "confirmed" },
+            { label: "Effective Buy-out", class: "michelin" },
+            { label: "9 Covers", class: "" },
+            { label: "Yakiniku-Kappō", class: "" }
+          ]
+        }
+      ]
+    },
+    {
+      date: "2026-06-02",
+      dayNum: 4,
+      title: "Kanda",
+      city: "Tokyo",
+      summary: "The apex. Three Michelin stars in Sugimoto's Toranomon room.",
+      stops: [
+        {
+          time: "Afternoon",
+          title: "A Quiet Afternoon",
+          type: "leisure",
+          locationName: "Tokyo · Light schedule advised",
+          address: "At your discretion",
+          mapsQuery: "Tokyo",
+          desc: "We suggest a deliberately quiet afternoon. Kanda is the apex of the trip and rewards an unhurried arrival — light lunch, a walk, a short rest. The room is small, the chef reads his guests carefully, and the evening unfolds best when the table is fully present.",
+          badges: [{ label: "Light Eating Advised", class: "leisure" }]
+        },
+        {
+          time: "20:00 · Apex",
+          title: "Kanda",
+          type: "dinner",
+          locationName: "Kanda · Toranomon, Tokyo",
+          address: "Toranomon, Minato City, Tokyo, Japan",
+          mapsQuery: "Kanda restaurant Toranomon Tokyo",
+          desc: "Kanda remains one of Tokyo's defining kaiseki experiences. After nearly two decades in Moto-Azabu, Chef Hiroyuki Kanda relocated the restaurant to Toranomon, where the new space was designed by artist and architect Hiroshi Sugimoto — stone, wood, and subtle light composed into a serene, almost spiritual environment that mirrors the quiet elegance of the cuisine. Three Michelin stars retained throughout. Refined simplicity, seasonal precision, deeply personal hospitality.",
+          note: "No fragrance at the counter — critical. The room is released at 20:00 sharp. Six covers only, held for the inner group.",
+          badges: [
+            { label: "Confirmed", class: "confirmed" },
+            { label: "★★★ Michelin", class: "michelin" },
+            { label: "6 Covers", class: "" },
+            { label: "Kaiseki · Tier 1", class: "" }
+          ]
+        }
+      ]
+    },
+    {
+      date: "2026-06-03",
+      dayNum: 5,
+      title: "Departure from Tokyo",
+      city: "Tokyo",
+      summary: "Late check-out at Janu held on request. Onward travel.",
+      stops: [
+        {
+          time: "Morning",
+          title: "Onward Travel",
+          type: "departure",
+          locationName: "Janu Tokyo · Azabudai Hills",
+          address: "1-2-2 Azabudai, Minato City, Tokyo 106-0041, Japan",
+          mapsQuery: "Janu Tokyo Azabudai Hills",
+          desc: "Late check-out at Janu held on request. Private transfers to Haneda or Narita coordinated through the hotel and Happy Camper. A final breakfast at the hotel before the group disperses.",
+          note: "A short post-trip note will follow, with restaurant feedback collected for the next visit.",
+          badges: [{ label: "Departure", class: "" }]
+        }
+      ]
+    }
+  ]
+};
+
+/* ─────────────────────────────────────────────────────────────
+   STATE & HELPERS
+   ───────────────────────────────────────────────────────────── */
+
+// Today, in JST. (Always treat dates relative to Japan local time.)
+function nowJST() {
+  // Format: get current UTC time, add 9h offset
+  const now = new Date();
+  const jstMs = now.getTime() + (now.getTimezoneOffset() * 60000) + (9 * 3600000);
+  return new Date(jstMs);
+}
+
+function jstDateString(d = nowJST()) {
+  const yr = d.getFullYear();
+  const mo = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yr}-${mo}-${dd}`;
+}
+
+function formatJSTClock() {
+  const d = nowJST();
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+function prettyDate(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  const dayName = d.toLocaleDateString('en-GB', { weekday: 'long' });
+  const day = d.getDate();
+  const month = d.toLocaleDateString('en-GB', { month: 'long' });
+  return { dayName, day, month, full: `${dayName} · ${day} ${month}` };
+}
+
+function getCurrentDayIndex() {
+  const today = jstDateString();
+  return TRIP_DATA.days.findIndex(d => d.date === today);
+}
+
+function isPastDay(dateIso) {
+  return dateIso < jstDateString();
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CLOCK
+   ───────────────────────────────────────────────────────────── */
+function updateClock() {
+  document.getElementById('clock-time').textContent = formatJSTClock();
+
+  // Day pill: "DAY 2 OF 5 · TOKYO" or "T-3 DAYS · ARRIVAL 30 MAY"
+  const pill = document.getElementById('day-pill');
+  const idx = getCurrentDayIndex();
+  if (idx >= 0) {
+    pill.style.display = 'inline-flex';
+    pill.textContent = `Day ${TRIP_DATA.days[idx].dayNum} of ${TRIP_DATA.days.length} · ${TRIP_DATA.days[idx].city}`;
+  } else {
+    const today = jstDateString();
+    if (today < TRIP_DATA.startDate) {
+      const diff = Math.ceil((new Date(TRIP_DATA.startDate) - new Date(today)) / 86400000);
+      pill.style.display = 'inline-flex';
+      pill.textContent = diff === 1 ? `Tomorrow · Arrival in Tokyo` : `T-${diff} days · Arrival 30 May`;
+    } else if (today > TRIP_DATA.endDate) {
+      pill.style.display = 'inline-flex';
+      pill.textContent = `Trip complete · Okaerinasai`;
+    } else {
+      pill.style.display = 'none';
+    }
+  }
+}
+setInterval(updateClock, 30000);
+updateClock();
+
+/* ─────────────────────────────────────────────────────────────
+   ITINERARY RENDER
+   ───────────────────────────────────────────────────────────── */
+function renderDays() {
+  const container = document.getElementById('days-container');
+  const todayIdx = getCurrentDayIndex();
+  const today = jstDateString();
+
+  TRIP_DATA.days.forEach((day, idx) => {
+    const isToday = day.date === today;
+    const isPast = isPastDay(day.date);
+    const datePretty = prettyDate(day.date);
+    // Auto-expand: today, OR if pre-trip, expand the first day
+    const shouldExpand = isToday || (todayIdx === -1 && idx === 0 && today < TRIP_DATA.startDate);
+
+    const cardEl = document.createElement('article');
+    cardEl.className = `day-card ${isToday ? 'is-today' : ''} ${isPast ? 'is-past' : ''} ${shouldExpand ? 'expanded' : ''}`;
+
+    cardEl.innerHTML = `
+      <button class="day-header" aria-expanded="${shouldExpand}">
+        <div class="day-num">${day.dayNum}</div>
+        <div class="day-info">
+          <div class="day-date">${datePretty.dayName} · ${datePretty.day} ${datePretty.month}</div>
+          <div class="day-title">${day.title}</div>
+        </div>
+        <div class="day-toggle">▾</div>
+      </button>
+      <div class="day-body">
+        <div class="day-body-inner">
+          <div class="weather loading" data-date="${day.date}">
+            <span class="weather-icon">⌛</span>
+            <span class="weather-desc">Loading Tokyo forecast…</span>
+          </div>
+          <div class="timeline">
+            ${day.stops.map(stop => renderStop(stop)).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(cardEl);
+
+    cardEl.querySelector('.day-header').addEventListener('click', () => {
+      cardEl.classList.toggle('expanded');
+      const exp = cardEl.classList.contains('expanded');
+      cardEl.querySelector('.day-header').setAttribute('aria-expanded', exp);
+    });
+  });
+}
+
+function renderStop(stop) {
+  // If a stop provides a direct Google Maps link (e.g. a maps.app.goo.gl
+  // short URL pointing at a specific venue), use it. Otherwise fall back to
+  // a search query built from mapsQuery or locationName.
+  const mapsUrl = stop.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.mapsQuery || stop.locationName)}`;
+  const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(stop.mapsQuery || stop.locationName)}`;
+
+  const badges = (stop.badges || []).map(b =>
+    `<span class="badge ${b.class || ''}">${b.label}</span>`
+  ).join('');
+
+  const note = stop.note ? `<div class="stop-note">${stop.note}</div>` : '';
+  const meta = stop.locationName ? `<div class="stop-meta">${stop.locationName}</div>` : '';
+
+  return `
+    <div class="stop">
+      <div class="stop-time">${stop.time}</div>
+      <h3 class="stop-title">${stop.title}</h3>
+      ${meta}
+      ${badges ? `<div class="badges">${badges}</div>` : ''}
+      <div class="stop-desc">${stop.desc}</div>
+      ${note}
+      <div class="actions">
+        <a class="action primary" href="${mapsUrl}" target="_blank" rel="noopener">
+          <span class="action-icon">◉</span> Open in Maps
+        </a>
+        <a class="action" href="${navUrl}" target="_blank" rel="noopener">
+          <span class="action-icon">↗</span> Navigate
+        </a>
+        ${stop.address ? `<button class="action copy-btn" data-copy="${escapeAttr(stop.address)}">
+          <span class="action-icon">⎘</span> Copy address
+        </button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function escapeAttr(s) { return String(s).replace(/"/g, '&quot;'); }
+
+/* ─────────────────────────────────────────────────────────────
+   WEATHER · Open-Meteo (no API key required)
+   API docs: https://open-meteo.com/en/docs
+   Forecast horizon ≈ 16 days. We compute the in-range window before
+   calling the API and show a quiet fallback for everything beyond it.
+   ───────────────────────────────────────────────────────────── */
+function setFallback(el, msg) {
+  el.classList.remove('loading');
+  el.innerHTML = `
+    <span class="weather-icon">◌</span>
+    <span class="weather-desc">${msg}</span>
+  `;
+}
+
+function daysBetween(a, b) {
+  return Math.round((new Date(b) - new Date(a)) / 86400000);
+}
+
+async function loadWeather() {
+  const { lat, lon } = TRIP_DATA.weatherCoords;
+  const today = jstDateString();
+  const FORECAST_HORIZON = 15; // Open-Meteo safely covers ~16 days; keep one day buffer
+
+  // Determine which trip dates fall inside the forecast window.
+  const inRange = TRIP_DATA.days.filter(d => {
+    const delta = daysBetween(today, d.date);
+    return delta >= 0 && delta <= FORECAST_HORIZON;
+  });
+
+  // If nothing is in range, show a friendly fallback on every card and skip the API entirely.
+  if (inRange.length === 0) {
+    const tripStart = TRIP_DATA.startDate;
+    const daysUntil = daysBetween(today, tripStart);
+    const msg = daysUntil > FORECAST_HORIZON
+      ? `Forecast opens ${daysUntil - FORECAST_HORIZON} day${daysUntil - FORECAST_HORIZON === 1 ? '' : 's'} from now`
+      : 'Forecast available closer to date';
+    document.querySelectorAll('.weather.loading').forEach(el => setFallback(el, msg));
+    return;
+  }
+
+  // Fetch only the in-range slice.
+  const fetchStart = inRange[0].date;
+  const fetchEnd = inRange[inRange.length - 1].date;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+              `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
+              `&timezone=Asia%2FTokyo&start_date=${fetchStart}&end_date=${fetchEnd}`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('forecast endpoint returned ' + res.status);
+    const data = await res.json();
+    const daily = data && data.daily;
+    if (!daily || !daily.time) throw new Error('no daily data');
+
+    daily.time.forEach((dateStr, i) => {
+      const el = document.querySelector(`.weather[data-date="${dateStr}"]`);
+      if (!el) return;
+      const min = Math.round(daily.temperature_2m_min[i]);
+      const max = Math.round(daily.temperature_2m_max[i]);
+      const rain = daily.precipitation_probability_max[i] ?? 0;
+      const code = daily.weather_code[i];
+      const { icon, desc } = decodeWeather(code);
+      el.classList.remove('loading');
+      el.innerHTML = `
+        <span class="weather-icon">${icon}</span>
+        <span class="weather-desc">${desc} · <span class="weather-temp">${min}° / ${max}°</span></span>
+        <span class="weather-rain">${rain}% rain</span>
+      `;
+    });
+  } catch (err) {
+    // Silent — the fallback handler below covers it. No console noise.
+  }
+
+  // Any card still in loading state → graceful fallback (covers both
+  // out-of-range days and any partial API failure).
+  document.querySelectorAll('.weather.loading').forEach(el => {
+    setFallback(el, 'Forecast available closer to date');
+  });
+}
+
+// WMO weather codes → icon + label
+function decodeWeather(code) {
+  const map = {
+    0:  { icon: '☀', desc: 'Clear sky' },
+    1:  { icon: '🌤', desc: 'Mainly clear' },
+    2:  { icon: '⛅', desc: 'Partly cloudy' },
+    3:  { icon: '☁',  desc: 'Overcast' },
+    45: { icon: '🌫', desc: 'Fog' },
+    48: { icon: '🌫', desc: 'Rime fog' },
+    51: { icon: '🌦', desc: 'Light drizzle' },
+    53: { icon: '🌦', desc: 'Drizzle' },
+    55: { icon: '🌦', desc: 'Heavy drizzle' },
+    61: { icon: '🌧', desc: 'Light rain' },
+    63: { icon: '🌧', desc: 'Rain' },
+    65: { icon: '🌧', desc: 'Heavy rain' },
+    71: { icon: '🌨', desc: 'Light snow' },
+    73: { icon: '🌨', desc: 'Snow' },
+    75: { icon: '🌨', desc: 'Heavy snow' },
+    80: { icon: '🌦', desc: 'Rain showers' },
+    81: { icon: '🌧', desc: 'Heavy showers' },
+    82: { icon: '⛈', desc: 'Violent showers' },
+    95: { icon: '⛈', desc: 'Thunderstorm' },
+    96: { icon: '⛈', desc: 'Thunderstorm w/ hail' },
+    99: { icon: '⛈', desc: 'Severe thunderstorm' }
+  };
+  return map[code] || { icon: '◌', desc: 'Forecast pending' };
+}
+
+/* ─────────────────────────────────────────────────────────────
+   COPY ADDRESS · with toast
+   ───────────────────────────────────────────────────────────── */
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  const txt = btn.dataset.copy;
+  try {
+    await navigator.clipboard.writeText(txt);
+    showToast('Address copied');
+  } catch {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast('Address copied'); } catch { showToast('Copy failed'); }
+    document.body.removeChild(ta);
+  }
+});
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TAB SWITCHING
+   ───────────────────────────────────────────────────────────── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+/* ─────────────────────────────────────────────────────────────
+   CURRENCY CONVERTER (JPY ↔ USD)
+   Default rate is editable. Persists in localStorage.
+   ───────────────────────────────────────────────────────────── */
+const FX_KEY = 'hci_fx_rate_v1';
+let fxRate = parseFloat(localStorage.getItem(FX_KEY)) || 155; // JPY per USD
+
+function syncFxFromJpy() {
+  const jpy = parseFloat(document.getElementById('fx-jpy').value) || 0;
+  document.getElementById('fx-usd').value = (jpy / fxRate).toFixed(2);
+}
+function syncFxFromUsd() {
+  const usd = parseFloat(document.getElementById('fx-usd').value) || 0;
+  document.getElementById('fx-jpy').value = Math.round(usd * fxRate);
+}
+function updateFxRateDisplay() {
+  document.getElementById('fx-rate-display').textContent = `1 USD = ${fxRate} JPY`;
+}
+document.getElementById('fx-jpy').addEventListener('input', syncFxFromJpy);
+document.getElementById('fx-usd').addEventListener('input', syncFxFromUsd);
+document.getElementById('fx-edit').addEventListener('click', () => {
+  const next = prompt('Set exchange rate (JPY per 1 USD):', fxRate);
+  const parsed = parseFloat(next);
+  if (parsed && parsed > 0) {
+    fxRate = parsed;
+    localStorage.setItem(FX_KEY, fxRate);
+    updateFxRateDisplay();
+    syncFxFromJpy();
+  }
+});
+updateFxRateDisplay();
+syncFxFromJpy();
+
+/* ─────────────────────────────────────────────────────────────
+   INIT
+   ───────────────────────────────────────────────────────────── */
+renderDays();
+loadWeather();
+</script>
+
+</body>
+</html>
